@@ -1,8 +1,8 @@
+{{- if .Values.ingress.host  -}}
 {{- $fullName := include "fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $apiCondition := semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 {{- $label:= include "labels" . -}}
-{{- range $ingress := .Values.ingresses}}
 {{- if $apiCondition -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
@@ -10,27 +10,26 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $ingress.name }}
+  name: "{{ template "fullname" . }}-ingress"
   labels:
     {{- $label | nindent 4 }}
-  {{- with $ingress.annotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if $ingress.tlsSecretName }}
+  {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-      - {{ $ingress.host }}
-      secretName: {{ $ingress.tlsSecretName }}
+      - {{ .Values.ingress.host }}
+      secretName: "{{ template "fullname" . }}-tls"
   {{- end }}
   rules:
-    - host: {{ $ingress.host }}
+    - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: {{ $ingress.path }}
+          - path: {{ .Values.ingress.path }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
----
 {{- end }}

@@ -14,6 +14,7 @@ data:
   # the pods to restart
   AGENT_AGENTINFO_SERVICE: {{ include "fullname" . }}
   AGENT_AGENTINFO_NAMESPACE: {{ .Release.Namespace }}
+  AGENT_AGENTINFO_INGRESS: {{.Values.ingress.host}}
   {{- range $setting, $option := .Values.config }}
   {{ $setting }}: "{{ $option }}"
   {{- end }}
