@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: "{{ template "fullname" . }}-env"
+    labels:
+      app: {{ template "name" . }}
+      chart: {{ template "chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+data:
+  ## Force UTC timezone
+  TZ: Etc/UTC
+  # Note: changing `Values.environmentVariables` won't change the configmap checksum and so won't make
+  # the pods to restart
+  AGENT_AGENTINFO_SERVICE: {{ include "fullname" . }}
+  AGENT_AGENTINFO_NAMESPACE: {{ .Release.Namespace }}
+  {{- range $setting, $option := .Values.config }}
+  {{ $setting }}: "{{ $option }}"
+  {{- end }}

@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}
+  labels:
+    {{- include "labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          envFrom:
+          - configMapRef:
+              name: "{{ template "fullname" . }}-env"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.ports }}
+          ports:
+            {{- range .Values.ports }}
+            - name: {{.name}}
+              containerPort: {{.port}}
+              protocol: {{.protocol}}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+            initialDelaySeconds: {{.Values.livenessProbe.delay }}
+            httpGet:
+              path: {{.Values.livenessProbe.path }}
+              port: {{.Values.livenessProbe.port }}
+              httpHeaders:
+                - name: "api-key"
+                  value: {{.Values.config.AGENT_AGENTINFO_APIKEY }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+            initialDelaySeconds: {{.Values.readinessProbe.delay }}
+            httpGet:
+              path: {{.Values.readinessProbe.path }}
+              port: {{.Values.readinessProbe.port }}
+              httpHeaders:
+                - name: "api-key"
+                  value: {{.Values.config.AGENT_AGENTINFO_APIKEY }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

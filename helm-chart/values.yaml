@@ -1,0 +1,99 @@
+# Default values for helm-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ashish155/hybridk8s-agent
+  pullPolicy: Always
+  tag: v0.0.5
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+   create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+   name: hybrid-agent
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+   type: LoadBalancer
+   port: 8080
+   targetPort: agent-port
+
+ingresses: []
+#  - name: local-ingress
+#    host: chart-example.local
+#    tlsSecretName: chart-example-tls
+#    annotations:
+#      cert-manager.io/cluster-issuer: letsencrypt-prod
+#      kubernetes.io/ingress.class: nginx-office
+#      kubernetes.io/tls-acme: 'true'
+#    path: "/"
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+   limits:
+     cpu: 500m
+     memory: 256Mi
+   requests:
+     cpu: 100m
+     memory: 128Mi
+
+ports:
+   - name: agent-port
+     port: 8080
+     protocol: TCP
+
+livenessProbe:
+     delay: 30
+     path: /healthz
+     port: agent-port
+readinessProbe:
+   delay: 30
+   path: /healthz
+   port: agent-port
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+rbac:
+  rules:
+    # to check nodes for node readiness label
+    - apiGroups: [""]
+      resources: ["replicasets","pods/log","services"]
+      verbs: ["get","list"]
+    - apiGroups: [ "extensions","apps" ]
+      resources: [ "deployments","replicasets" ]
+      verbs: [ "get","list","watch" ]
+    - apiGroups: [ "","metrics.k8s.io"]
+      resources: ["pods"]
+      verbs: [ "get","list","watch" ]
+
+config:
+  AGENT_AGENTINFO_APIKEY: 52fdfc072182654f163f5f0f9a621d
+  AGENT_PING_URL: http://verification-server.cadre:80/heartbeat
+  AGENT_PING_DURATION: 5
+  AGENT_METRICS_LINKERD: http://prometheus.linkerd-viz:9090

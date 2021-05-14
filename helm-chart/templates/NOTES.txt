@@ -1,0 +1,3 @@
+Thanks for installing HybridK8s agent!!
+
+If the cluster is not online on the cluster page, please recheck the cluster api key or reach us at support@hybridk8s.tech 
