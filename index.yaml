@@ -8,7 +8,7 @@ entries:
       name: chart
       type: application
       urls:
-        - https://github.com/far-eye/charts/releases/download/v1.2.0/fareye-microservices-chart-1.2.0.tgz
-      version: 1.2.0
+        - https://github.com/HybridK8s/agent-chart/releases/download/v0.0.5/agent-0.0.5.tgz
+      version: v0.0.5
 
 generated: "2021-05-15T00:00:40.868925797+05:30"
