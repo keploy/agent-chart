@@ -36,7 +36,7 @@ service:
    targetPort: agent-port
 
 ingress:
-  host:
+  host: ""
   tls: true
   annotations: {}
   path: "/"
@@ -89,7 +89,6 @@ rbac:
 
 config:
   AGENT_AGENTINFO_APIKEY: 52fdfc072182654f163f5f0f9a621d
-  AGENT_PING_URL: http://54.175.141.176:30741/heartbeat
+  AGENT_PING_URL: https://health.qa.hybridk8s.tech/heartbeat
   AGENT_PING_DURATION: 5
   AGENT_METRICS_LINKERD: http://prometheus.linkerd-viz:9090
-  AGENT_AGENTINFO_INGRESS: ""
