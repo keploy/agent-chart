@@ -13,4 +13,5 @@ helm repo add agent https://HybridK8s.github.io/charts
 ###### Install the helm chart:
 
 ```bash
-helm install <deployment> -n=<Namespace> agent/helm-chart
+helm install <deployment> -n=<Namespace> agent/agent
+```
