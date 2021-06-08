@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: ashish155/hybridk8s-agent
   pullPolicy: Always
-  tag: v0.0.5
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -36,7 +36,7 @@ service:
    targetPort: agent-port
 
 ingress:
-  host:
+  host: ""
   tls: true
   annotations: {}
   path: "/"
@@ -89,6 +89,6 @@ rbac:
 
 config:
   AGENT_AGENTINFO_APIKEY: 52fdfc072182654f163f5f0f9a621d
-  AGENT_PING_URL: http://verification-server.cadre:80/heartbeat
+  AGENT_PING_URL: https://health.qa.hybridk8s.tech/heartbeat
   AGENT_PING_DURATION: 5
   AGENT_METRICS_LINKERD: http://prometheus.linkerd-viz:9090
