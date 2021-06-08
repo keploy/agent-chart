@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   agent:
   - apiVersion: v2
+    created: "2021-06-08T14:08:42.682939292Z"
+    description: HybridK8s Agent Chart
+    digest: 05878efe051ebaa40e2034cc908434b9db69c0bd39e672c6263d95495109770f
+    name: agent
+    type: application
+    urls:
+    - https://github.com/HybridK8s/agent-chart/releases/download/agent-0.0.7/agent-0.0.7.tgz
+    version: 0.0.7
+  - apiVersion: v2
     created: "2021-06-08T11:59:21.378859268Z"
     description: HybridK8s Agent Chart
     digest: 570e2a2630073cb9e1f16b8d13bad61a49cb5db0901c657e21a82584ac9a9503
@@ -19,4 +28,4 @@ entries:
     urls:
     - https://github.com/HybridK8s/agent-chart/releases/download/agent-0.0.4/agent-0.0.4.tgz
     version: 0.0.4
-generated: "2021-06-08T11:59:21.378866768Z"
+generated: "2021-06-08T14:08:42.682949292Z"
