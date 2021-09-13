@@ -5,7 +5,12 @@
 replicaCount: 1
 
 image:
-  repository: ashish155/hybridk8s-agent
+  repository: slayerjain/hybridk8s-agent
+  pullPolicy: Always
+  tag: latest
+
+parserImage:
+  repository: slayerjain/log-parser
   pullPolicy: Always
   tag: latest
 
@@ -86,9 +91,29 @@ rbac:
     - apiGroups: [ "","metrics.k8s.io"]
       resources: ["pods"]
       verbs: [ "get","list","watch" ]
+    # to manage flagger objects
+    - apiGroups:
+        - flagger.app
+      resources:
+        - canaries
+        - canaries/status
+        - metrictemplates
+        - metrictemplates/status
+        - alertproviders
+        - alertproviders/status
+      verbs:
+        - get
+        - list
+        - watch
+        - create
+        - update
+        - patch
+        - delete
 
 config:
   AGENT_AGENTINFO_APIKEY: 52fdfc072182654f163f5f0f9a621d
   AGENT_PING_URL: https://health.prod.hybridk8s.tech/heartbeat
   AGENT_PING_DURATION: 5
-  AGENT_METRICS_LINKERD: http://prometheus.linkerd-viz:9090
+  AGENT_METRICS_PROMETHEUS: http://prometheus.istio-system:9090
+  AGENT_PARSER: /var/parser/sock
+  AGENT_METRICS_MESH: istio
