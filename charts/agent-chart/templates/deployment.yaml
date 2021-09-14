@@ -21,8 +21,14 @@ spec:
       serviceAccountName: {{ include "serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: data
+          emptyDir: {}
       containers:
         - name: {{ .Chart.Name }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/parser
           envFrom:
           - configMapRef:
               name: "{{ template "fullname" . }}-env"
@@ -60,6 +66,29 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        - name: parser
+          image: "{{ .Values.parserImage.repository }}:{{ .Values.parserImage.tag }}"
+          imagePullPolicy: {{ .Values.parserImage.pullPolicy }}
+          command:
+            - gunicorn
+          args:
+            - "--bind"
+            - "unix:/var/parser/sock"
+            - "wsgi:app"
+          volumeMounts:
+          - name: data
+            mountPath: /var/parser
+          envFrom:
+          - configMapRef:
+              name: "{{ template "fullname" . }}-env"
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            exec:
+              command:
+              - sh
+              - -c
+              - curl -XGET  --unix-socket /var/parser/sock http://localhost/healthz
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
