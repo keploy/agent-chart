@@ -83,7 +83,8 @@ spec:
               name: "{{ template "fullname" . }}-env"
           livenessProbe:
             initialDelaySeconds: 10
-            periodSeconds: 5
+            periodSeconds: 20
+            timeoutSeconds: 20
             exec:
               command:
               - sh
