@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   agent:
   - apiVersion: v2
+    created: "2021-10-12T09:19:25.462071971Z"
+    description: Keploy Agent Chart
+    digest: ce49de43ce57878018398a6660d6f2e405d18e00ff1b48757526ab2708ab0fbd
+    name: agent
+    type: application
+    urls:
+    - https://github.com/Keploy/agent-chart/releases/download/agent-0.2.2/agent-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
     created: "2021-10-10T18:14:51.311587858Z"
     description: Keploy Agent Chart
     digest: 37eaa78f9f6bec42e3fcd3589040f349477606772c3203191c54e34a1f968e6d
@@ -64,4 +73,4 @@ entries:
     urls:
     - https://github.com/HybridK8s/agent-chart/releases/download/agent-0.0.4/agent-0.0.4.tgz
     version: 0.0.4
-generated: "2021-10-10T18:14:51.311628059Z"
+generated: "2021-10-12T09:19:25.462107773Z"
